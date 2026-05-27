@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, render_template_string, session, 
 
 admin_blueprint = Blueprint('admin', __name__)
 
-# 🔒 بيانات اعتماد لوحة الإدارة الحصينة لعام 2026 ومفاتيح العبور
+# 🔒 بيانات اعتماد لوحة الإدارة الحصينة ومفاتيح عبور الرادار لعام 2026
 ADMIN_USER = "albrawe"
 ADMIN_PASS = "PASS2026"
 SECRET_GATE_KEY = "open_gate_key_final_2026"
@@ -121,18 +121,7 @@ ADMIN_HTML = """
             let hours = Math.floor(remainder / 3600);
             remainder = remainder % 3600;
             let minutes = Math.floor(remainder / 60);
-            let seconds = remainder % 60;
-            
-            let timeParts = [];
-            if (years > 0) timeParts.push(years + " سنة");
-            if (months > 0) timeParts.push(months + " شهر");
-            if (days > 0) timeParts.push(days + " يوم");
-            if (hours > 0) timeParts.push(hours + " ساعة");
-            if (minutes > 0) timeParts.push(minutes + " دقيقة");
-            if (seconds > 0 || timeParts.length === 0) timeParts.push(seconds + " ثانية");
-            return timeParts.join(" و ");
-        }
-        function fetchAndRenderAnalytics() {
+            let seconds = remainde        function fetchAndRenderAnalytics() {
             fetch('/api/admin_get_all_data')
             .then(res => res.json())
             .then(data => {
@@ -290,3 +279,10 @@ def admin_logout():
     session.pop('admin_logged_in', None)
     session.pop('gate_key_authenticated', None)
     return redirect('/')
+eParts.push(months + " شهر");
+            if (days > 0) timeParts.push(days + " يوم");
+            if (hours > 0) timeParts.push(hours + " ساعة");
+            if (minutes > 0) timeParts.push(minutes + " دقيقة");
+            if (seconds > 0 || timeParts.length === 0) timeParts.push(seconds + " ثانية");
+            return timeParts.join(" و ");
+        }
