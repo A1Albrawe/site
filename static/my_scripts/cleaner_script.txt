@@ -1,0 +1,6 @@
+سكريبت التنظيف والتصفية التلقائية
+كود بايثون القياسي المستخدم لبتر وحظر الرموز المعلقة \n حياً من الحاويات السحابية لقواعد البيانات:
+def clean_cyber_stream(raw_data):
+    if not raw_data:
+        return ""
+    return str(raw_data).replace('\n', '').replace('\r', '').strip()
