@@ -1,0 +1,3 @@
+الضغط السريع
+fas fa-mouse-pointer
+#ffffff
