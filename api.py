@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify
 
 api_blueprint = Blueprint('api', __name__)
 
-# الذاكرة السحابية الصلبة لمنع تصفير الأرشيف التاريخي في بيئة خوادم Vercel Serverless
+# تأمين الحاويات السحابية من التصفير العشوائي في بيئة Serverless Functions لـ Vercel
 if not hasattr(api_blueprint, 'CENTRAL_ANALYTICS_SERVER_DB'):
     api_blueprint.CENTRAL_ANALYTICS_SERVER_DB = []
 
@@ -20,7 +20,7 @@ def log_visit():
     user_agent = request.headers.get('User-Agent', 'غير معروف')
     location = data.get('location', 'جاري جلب الموقع...').strip()
     
-    # خوارزمية الفرز والتعرف الرقمي على موديلات وماركات هواتف اللاب توب والكمبيوتر حياً
+    # محرك الرصد التكتيكي لفرز ماركات الهواتف والكمبيوتر لحظياً لمنع ومسح الهويات الوهمية
     device_model = "كمبيوتر / غير معروف"
     ua_lower = user_agent.lower()
     if "android" in ua_lower:
