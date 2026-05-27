@@ -54,7 +54,7 @@ HOME_HTML = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>علي احمد البراوي | البوابة التعريفية</title>
+    <title>الرئيسية</title>
     <link rel="stylesheet" href="https://cloudflare.com">
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     """ + HOME_CSS + """
@@ -78,11 +78,11 @@ HOME_HTML = """
         <div class="profile-meta-row" id="cyberTiltAvatarZone">
             <div class="avatar-wrapper-circle" id="avatarCircleImg">
                 <!-- ✅ نظام الحصانة والامان الثنائي: يقوم بتبديل وتجربة الامتداد تلقائياً فوراً إذا فشل السيرفر في قراءة حروف الـ png الصغيرة -->
-                <img class="avatar-img-circle" id="userProfileAvatar" src="/static/avatar.png" alt="علي احمد البراوي" onerror="handleAvatarImageError(this)">
+                <img class="avatar-img-circle" id="userProfileAvatar" src="/static/avatar.png" alt="Albrawe - البراوي " onerror="handleAvatarImageError(this)">
             </div>
             
                 <div class="user-full-name">
-                    <span>علي احمد البراوي</span>
+                    <span>Albrawe - البراوي </span>
                     <span class="user-slug-name">(Albrawe)</span>
                 </div>
                 <div class="followers-badge-line">
@@ -94,7 +94,7 @@ HOME_HTML = """
         <div class="info-dashboard-card">
             <div class="dashboard-title-row"><i class="fas fa-info-circle"></i> لوحة المعلومات والنبذة التعريفية المعتمدة</div>
             <div class="meta-info-grid">
-                <div class="info-item-box"><i class="fas fa-briefcase"></i><span>منشئ محتوى رقمي حياً بـ Cairo • عمل حر 💼</span></div>
+                <div class="info-item-box"><i class="fas fa-briefcase"></i><span> مبرمج </span></div>
                 <div class="info-item-box"><i class="fas fa-graduation-cap"></i><span>درس في <span class="highlight-text-blue">Ain Shams University</span> 🎓</span></div>
                 <div class="info-item-box"><i class="fas fa-school"></i><span>درس في <span style="color:#fff; font-weight:bold;">ابن خلدون الثانوية</span> 🏫</span></div>
                 <div class="info-item-box" style="border-top:1px dashed var(--border-sub); padding-top:12px; grid-column:1/-1;">
@@ -106,7 +106,7 @@ HOME_HTML = """
         
     </div>
 
-    <div class="global-footer-bar">حقوق النشر محفوظة برمجياً وتعود إلى المسؤول البراوي بتاريخ 2026 ©</div>
+    <div class="global-footer-bar">حقوق النشر محفوظة وتعود إلى البراوي 2026 ©</div>
 
     <script>
         // 🛡️ خوارزمية جدار حماية صور الغلاف والأفاتار للتحايل الحركي على كاش وحساسية سيرفرات فيرسيل
