@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify
 
 api_blueprint = Blueprint('api', __name__)
 
-# الذاكرة السحابية الصلبة لمنع تصفير الأرشيف التراكمي في بيئة خوادم Vercel Serverless
+# 🛡️ تأمين الأرشيف التراكمي في بيئة خوادم Vercel Serverless ومنع تصفير السجلات
 if not hasattr(api_blueprint, 'CENTRAL_ANALYTICS_SERVER_DB'):
     api_blueprint.CENTRAL_ANALYTICS_SERVER_DB = []
 
@@ -20,7 +20,7 @@ def log_visit():
     user_agent = request.headers.get('User-Agent', 'غير معروف')
     location = data.get('location', 'جاري جلب الموقع...').strip()
     
-    # محرك فرز ورصد موديلات أجهزة زوار الموقع حياً وبدقة بالبكسل
+    # محرك الرصد والفرز السيبراني الدقيق لموديلات وماركات هواتف وأجهزة الزوار حياً
     device_model = "كمبيوتر / غير معروف"
     ua_lower = user_agent.lower()
     if "android" in ua_lower:
@@ -52,7 +52,6 @@ def log_visit():
         user_entry["deviceModel"] = device_model
         
     return jsonify({"status": "success"})
-
 @api_blueprint.route('/api/update_duration', methods=['POST'])
 def update_duration():
     data = request.get_json() or {}
