@@ -1,0 +1,3 @@
+X-O
+fas fa-times-circle
+#a371f7
