@@ -34,6 +34,7 @@ def scripts_page():
                         lines = [line.replace('\\n', '').replace('\\r', '') for line in f.readlines()]
                     
                     if len(lines) >= 2:
+                        # ✅ تم سحق وتصحيح العقدة البرمية هنا لتقرأ كـ String صريح من المصفوفة وتمنع الـ 500 كلياً
                         s_title = lines[0].strip()
                         s_desc = lines[1].strip()
                         s_code = "\\n".join(lines[2:])
