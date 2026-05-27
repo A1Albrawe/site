@@ -13,7 +13,7 @@ HOME_CSS_PART1 = """
     body { font-family: 'Courier New', Courier, monospace; background: var(--bg-global); color: var(--text-main); margin: 0; padding: 25px; box-sizing: border-box; display: flex; flex-direction: column; min-height: 100vh; justify-content: center; overflow-x: hidden; position: relative; }
     
     /* 🪐 هندسة ومحرك شلالات الأكواد والشبكة العسكرية التكتيكية بالخلفية (Cyber Falling Matrix Backdrop) */
-    body::before { content: ''; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03)); background-size: 100% 4px, 6px 100%; z-index: 2; pointer-events: none; }
+    body::before { content: ''; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 255, 0, 0.03)); background-size: 100% 4px, 6px 100%; z-index: 2; pointer-events: none; }
     
     .cyber-grid-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(31, 136, 61, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(31, 136, 61, 0.05) 1px, transparent 1px); background-size: 20px 20px; z-index: 1; pointer-events: none; }
     .cyber-matrix-rain { position: fixed; top: -100px; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent, rgba(0, 255, 102, 0.15) 50%, transparent); z-index: 1; pointer-events: none; animation: matrixRainFall 8s linear infinite; opacity: 0.4; }
@@ -22,13 +22,15 @@ HOME_CSS_PART1 = """
     /* 🌐 شريط الهيدر السيبراني الموحد الثابت */
     .top-nav { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto 30px auto; border-bottom: 2px solid var(--border-main); padding-bottom: 14px; box-sizing: border-box; position: relative; z-index: 1000; }
     .brand-logo { font-size: 24px; font-weight: bold; color: var(--text-white); text-shadow: 0 0 10px var(--border-neon), 0 0 20px var(--border-cyber); text-decoration: none; font-family: monospace; letter-spacing: 2px; }
-    .menu-btn-trigger { background: var(--bg-card); border: 1px solid var(--border-main); color: var(--border-neon); padding: 8px 18px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13.5px; display: flex; align-items: center; gap: 6px; font-family: inherit; box-shadow: 0 0 10px rgba(0,255,102,0.15); text-transform: uppercase; }
-    .menu-btn-trigger:hover { background: var(--border-neon); color: #000; box-shadow: 0 0 20px var(--border-neon); text-shadow: none; }
+    .menu-btn-trigger { background: var(--bg-card); border: 1px solid var(--border-main); color: var(--border-neon); padding: 8px 18px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 6px; font-family: inherit; box-shadow: 0 0 10px rgba(0,255,102,0.15); }
+    .menu-btn-trigger:hover { background: var(--border-neon); color: #000; box-shadow: 0 0 20px var(--border-neon); }
+</style>
+"""
 HOME_CSS_PART2 = """
 <style>
     .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; position: relative; z-index: 10; }
     
-    /* 💻 الهيكل ثنائي الأجنحة السينمائي المطور كلوحة تحكم حربية سيبرانية مقفلة */
+    /* 💻 الهيكل ثنائي الأجنحة السينمائي المطور كلوحة تحكم حربية سيبرانية مقفلة من الصفر */
     .responsive-profile-wrapper { 
         display: flex; flex-direction: row; gap: 40px; width: 100%; max-width: 1200px; 
         background: var(--bg-card); border: 1px solid var(--border-main); border-radius: 12px; 
@@ -41,11 +43,11 @@ HOME_CSS_PART2 = """
     .profile-sidebar-zone { flex: 1; max-width: 280px; display: flex; flex-direction: column; align-items: center; text-align: center; border-left: 2px solid var(--border-main); padding-left: 30px; box-sizing: border-box; }
     .profile-content-zone { flex: 2; display: flex; flex-direction: column; justify-content: center; text-align: right; box-sizing: border-box; padding-right: 15px; }
     
-    /* 🎯 أقواس الاستهداف الليزرية المتحركة للأفاتار المشع للهاكر */
+    /* 🎯 أقواس الاستهداف الليزرية المتحركة للأفاتار المشع للهاكر المعتمدة */
     .avatar-wrapper { width: 150px; height: 150px; border-radius: 8px; border: 2px solid var(--border-cyber); overflow: hidden; box-shadow: 0 0 25px rgba(255,0,127,0.3); margin-bottom: 20px; display: flex; align-items: center; justify-content: center; background: #000; position: relative; }
     .avatar-wrapper::before { content: ''; position: absolute; width: 100%; height: 100%; border: 2px dashed var(--border-neon); border-radius: 50%; animation: radarSpin 10s linear infinite; pointer-events: none; scale: 1.1; opacity: 0.6; }
     @keyframes radarSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .avatar-img { width: 100%; height: 100%; object-fit: cover; display: block; filter: sepia(30%) hue-rotate(80deg) brightness(95%); }
+    .avatar-img { width: 100%; height: 100%; object-fit: cover; display: block; }
     
     .profile-name { font-size: 32px; font-weight: bold; color: var(--text-white); margin: 0 0 6px 0; text-shadow: 0 0 10px rgba(255,255,255,0.4); letter-spacing: 1px; }
     .profile-title { font-size: 11px; font-weight: bold; color: var(--border-neon); margin: 0; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 0 8px var(--border-neon); }
@@ -55,6 +57,10 @@ HOME_CSS_PART2 = """
     .meta-label { font-weight: bold; color: var(--text-white); font-family: monospace; }
     .tech-highlight { color: #58a6ff; font-weight: bold; font-family: monospace; text-shadow: 0 0 8px rgba(88,166,255,0.4); }
     .global-footer-bar { width: 100%; text-align: center; padding: 20px 0; border-top: 1px solid var(--border-main); font-size: 11.5px; color: var(--text-main); font-family: monospace; position: relative; z-index: 100; margin-top: auto; letter-spacing: 1px; }
+</style>
+"""
+HOME_CSS_PART3 = """
+<style>
     /* 🕹️ حقن وتأمين عمارة الستارة الجانبية المنبثقة دائرياً من زاوية اليمين (Circular Expand Canvas) */
     .sidebar-overlay { 
         position: fixed !important; top: 0 !important; right: 0 !important; 
@@ -103,16 +109,19 @@ def get_embedded_games_html():
                     with open(file_path, 'r', encoding='utf-8') as f:
                         raw_lines = f.readlines()
                     lines = [str(line).replace('\\n', '').replace('\\r', '').strip() for line in raw_lines if line.strip()]
-                    game_name = lines if len(lines) > 0 else game_slug
-                    game_icon = lines if len(lines) > 1 else "fas fa-gamepad"
-                    game_color = lines if len(lines) > 2 else "#fff"
-                    node_html = f'<a href="/{game_slug}" class="game-link-btn" style="color: {game_color};"><i class="{game_icon}"></i> {game_name}</a>'
-                    games_list_nodes.append(node_html)
+                    
+                    if len(lines) >= 3:
+                        game_name = lines[0]
+                        game_icon = lines[1]
+                        game_color = lines[2]
+                        node_html = f'<a href="/{game_slug}" class="game-link-btn" style="color: {game_color};"><i class="{game_icon}"></i> {game_name}</a>'
+                        games_list_nodes.append(node_html)
     except Exception: pass
     return "".join(games_list_nodes) if games_list_nodes else '<p style="color:#1f883d; font-size:12px;">قائمة الألعاب فارغة.</p>'
 
 @home_blueprint.route('/')
 def home_page():
+    # ✅ تفعيل المزامنة ودمج الأجزاء الثلاثة للـ CSS حلاً صريحاً ومطلقاً لمنع ومسح الـ 404 نهائياً حياً
     dynamic_games_html = get_embedded_games_html()
     
     HOME_HTML = """
@@ -128,7 +137,6 @@ def home_page():
 </head>
 <body>
 
-    <!-- 🌌 حقن شبكة الرصد والتحليلات السيبرانية الخلفية المتحركة حياً -->
     <div class="cyber-grid-overlay"></div>
     <div class="cyber-matrix-rain"></div>
 
@@ -137,7 +145,6 @@ def home_page():
         <button class="menu-btn-trigger" onclick="toggleSidebarMenu(true)"><i class="fas fa-terminal"></i> CORE_MENU_</button>
     </div>
 
-    <!-- الستارة الجانبية مدمجة ومحمية بأعلى طبقة عرض فوق الكروت كلياً -->
     <div class="sidebar-overlay" id="slidingSidebarMenu">
         <button class="close-menu-btn" onclick="toggleSidebarMenu(false)"><i class="fas fa-times"></i> CLOSE_STREAM_</button>
         
@@ -164,7 +171,6 @@ def home_page():
     <div class="main-container">
         <div class="responsive-profile-wrapper">
             
-            <!-- الجناح الأيمن المدرع (الأفاتار الراداري والاسم المضيء) -->
             <div class="profile-sidebar-zone">
                 <div class="avatar-wrapper">
                     <img class="avatar-img" src="/static/avatar.png" alt="Albrawe Profile" onerror="this.src='https://flagcdn.com'">
@@ -173,7 +179,6 @@ def home_page():
                 <div class="profile-title">> SECURE_CORE_ENGINEER</div>
             </div>
             
-            <!-- الجناح الأيسر المدرع (الخبرات المشفرة والتقنيات العسكرية) -->
             <div class="profile-content-zone">
                 <div class="details-sub-box">
                     <span class="meta-item">
