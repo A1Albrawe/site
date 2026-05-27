@@ -1,40 +1,46 @@
 import os
-from flask import Blueprint, render_template_string, current_app, jsonify
+from flask import Blueprint, current_app, jsonify
 
 menu_blueprint = Blueprint('menu', __name__)
 
-# 🎨 عزل الأنماط الفلورسنتية الحركية: هندسة الانبثاق الدائري من الزاوية، والنبض المتدرج للأزرار
+# 🪐 عزل أنماط لوحة التحكم المظلمة: دمج خلفية الأسد القوطي وتوسيط الاسم المضيء بالملي
 MENU_CSS = """
 <style>
-    /* 🪐 هندسة الانبثاق الدائري المتمدد للستارة الجانبية من زاوية اليمين */
+    /* 🕹️ علبة الستارة الجانبية الطولية الفخمة المثبتة صراحة بأقصى يمين الشاشة */
     .sidebar-overlay { 
-        position: fixed !important; top: 0 !important; right: 0 !important; 
-        width: 320px !important; height: 100vh !important; 
-        background: rgba(8, 12, 20, 0.99) !important; 
+        position: fixed !important; top: 0 !important; right: -340px !important; 
+        width: 310px !important; height: 100vh !important; 
+        background: #06090d !important; 
         border-left: 2px solid #58a6ff !important; 
         box-shadow: -20px 0 40px rgba(0, 0, 0, 0.9) !important; 
-        z-index: 9999999 !important; 
+        z-index: 99999999 !important; 
         display: flex !important; flex-direction: column !important; 
-        padding: 30px 25px !important; box-sizing: border-box !important; 
-        text-align: right !important;
-        
-        /* تأثير الدائرة التكتيكية التي تتمدد وتتضخم بروعة سينمائية */
-        clip-path: circle(0% at 100% 0%);
-        transition: clip-path 0.45s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        padding: 25px 20px !important; box-sizing: border-box !important; 
+        text-align: right !important; direction: rtl !important;
+        transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        overflow-y: auto !important;
     }
-    .sidebar-overlay.active { 
-        clip-path: circle(150% at 100% 0%) !important; 
+    .sidebar-overlay.active { right: 0 !important; }
+    
+    /* ❌ زر الإغلاق النيوني التفاعلي المحمي بأعلى طبقة منعاً للتعليق البصري */
+    .close-menu-btn { background: rgba(22, 27, 34, 0.8); border: 1px solid #30363d; color: #ff5555; font-size: 13px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; align-self: flex-start; margin-bottom: 20px; font-family: inherit; z-index: 100000000 !important; transition: 0.2s; }
+    .close-menu-btn:hover { background: #ff5555; color: #fff; box-shadow: 0 0 10px #ff5555; }
+    
+    /* 🦁 صندوق الهوية القوطي الفاخر الحاوي لصورة الأسد وتوسيط الاسم المضيء أسفلها بالملي */
+    .lion-identity-card { 
+        width: 100%; height: 180px; 
+        background: linear-gradient(to bottom, rgba(11,15,23,0.4) 0%, #0b0f17 100%), url('https://ibb.co') no-repeat center center;
+        background-size: cover; border-radius: 12px; border: 1px solid #21262d;
+        margin-bottom: 25px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 15px; box-sizing: border-box; box-shadow: inset 0 0 20px #000, 0 10px 20px rgba(0,0,0,0.5);
     }
+    /* الاسم المضيء الفخم المتموضع بدقة هندسية أسفل صورة الأسد */
+    .lion-brand-title { font-size: 26px; font-weight: 900; color: #fff; font-family: 'Courier New', monospace; letter-spacing: 2px; text-transform: uppercase; margin: 0; text-shadow: 0 0 10px #58a6ff, 0 0 20px rgba(88,166,255,0.4); }
     
-    /* زر الإغلاق النيوني التفاعلي X */
-    .close-menu-btn { background: #161b22; border: 1px solid #30363d; color: #ff5555; font-size: 13.5px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 6px; align-self: flex-start; margin-bottom: 30px; font-family: inherit; transition: 0.2s; }
-    .close-menu-btn:hover { background: #ff5555; color: #fff; box-shadow: 0 0 12px #ff5555; }
+    .sidebar-links-wrapper { display: flex; flex-direction: column; text-align: right; gap: 4px; }
+    .section-menu-divider { font-size: 14.5px; font-weight: bold; display: flex; align-items: center; gap: 8px; justify-content: flex-start; margin-top: 12px; margin-bottom: 6px; border-bottom: 1px dashed #21262d; padding-bottom: 4px; color: #8b949e; }
     
-    .sidebar-links-wrapper { display: flex; flex-direction: column; text-align: right; gap: 5px; }
-    .section-menu-divider { font-size: 14.5px; font-weight: bold; display: flex; align-items: center; gap: 8px; justify-content: flex-start; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px dashed #21262d; padding-bottom: 6px; color: #8b949e; }
-    
-    /* 📦 زر المنسدل التفاعلي الفاخر لباقة ألعاب النظام */
-    .dropdown-trigger-btn { background: none; border: none; font-size: 15.5px; font-weight: bold; width: 100%; padding: 10px 0; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-family: inherit; margin: 4px 0; transition: 0.2s; animation: pulseArcadeGame 3s infinite alternate; }
+    /* 📦 هندسة زر المنسدل التفاعلي الفاخر لباقة ألعاب النظام المكتشفة تلقائياً */
+    .dropdown-trigger-btn { background: none; border: none; font-size: 15.5px; font-weight: bold; width: 100%; padding: 10px 0; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-family: inherit; color: #3fb950; text-shadow: 0 0 4px rgba(63,185,80,0.2); }
     .dropdown-trigger-btn i.arrow-icon { transition: transform 0.3s ease; font-size: 12px; margin-right: auto; padding-left: 5px; }
     .dropdown-trigger-btn.open-state i.arrow-icon { transform: rotate(180deg); }
     
@@ -43,25 +49,14 @@ MENU_CSS = """
     .game-link-btn:last-child { border-bottom: none; }
     .game-link-btn:hover { padding-right: 6px; text-shadow: 0 0 10px currentColor; }
     
-    /* ✨ شفرة النبض التكتيكي المتدرج للأزرار كنبضات القلب السيبرانية (Gradient Neon Pulse) */
-    .general-link-item { text-decoration: none; font-size: 15.5px; font-weight: bold; padding: 11px 0; display: block; font-family: inherit; transition: transform 0.2s; }
-    .general-link-item:hover { transform: translateX(-4px); }
-    
-    .link-home { color: #8b949e; animation: pulseHome 4s infinite alternate; }
-    .link-projects { color: #a371f7; animation: pulseProjects 3.5s infinite alternate; }
-    .link-about { color: #ff7b72; animation: pulseAbout 3.8s infinite alternate; }
-    .link-scripts { color: #58a6ff; animation: pulseScripts 3.2s infinite alternate; }
-    .link-report { color: #ff5555; animation: pulseReport 2.8s infinite alternate; }
-    .link-telegram { color: #388bfd; border-bottom: none; animation: pulseTelegram 4.2s infinite alternate; }
-    
-    /* 💓 محرك أنميشن نبضات القلب اللوني المضيء الفلورسنتي بالملي حياً */
-    @keyframes pulseHome { 0% { text-shadow: 0 0 4px rgba(255,255,255,0.2); color: #8b949e; } 100% { text-shadow: 0 0 14px #ffffff; color: #ffffff; } }
-    @keyframes pulseArcadeGame { 0% { text-shadow: 0 0 4px rgba(63,185,80,0.2); color: #3fb950; } 100% { text-shadow: 0 0 15px #3fb950, 0 0 25px #ff007f; color: #ff007f; } }
-    @keyframes pulseProjects { 0% { text-shadow: 0 0 4px rgba(163,113,247,0.2); color: #a371f7; } 100% { text-shadow: 0 0 14px #a371f7, 0 0 22px #00f0f0; color: #00f0f0; } }
-    @keyframes pulseAbout { 0% { text-shadow: 0 0 4px rgba(255,123,114,0.2); color: #ff7b72; } 100% { text-shadow: 0 0 14px #ff7b72; color: #ff5555; } }
-    @keyframes pulseScripts { 0% { text-shadow: 0 0 4px rgba(88,166,255,0.2); color: #58a6ff; } 100% { text-shadow: 0 0 14px #58a6ff, 0 0 20px #3fb950; color: #3fb950; } }
-    @keyframes pulseReport { 0% { text-shadow: 0 0 4px rgba(255,85,85,0.2); color: #ff5555; } 100% { text-shadow: 0 0 16px #ff0000; color: #fff; } }
-    @keyframes pulseTelegram { 0% { text-shadow: 0 0 4px rgba(56,139,253,0.2); color: #388bfd; } 100% { text-shadow: 0 0 14px #388bfd; color: #58a6ff; } }
+    /* روابط القائمة والخطوط الفلورسنتية النبضية الممتدة حياً */
+    .general-link-item { text-decoration: none; font-size: 15.5px; font-weight: bold; padding: 11px 0; display: block; font-family: inherit; transition: 0.2s; }
+    .link-home { color: #8b949e; } .link-home:hover { color: #fff; }
+    .link-projects { color: #a371f7; } .link-projects:hover { text-shadow: 0 0 8px #a371f7; }
+    .link-about { color: #ff7b72; } .link-about:hover { text-shadow: 0 0 8px #ff7b72; }
+    .link-scripts { color: #58a6ff; } .link-scripts:hover { text-shadow: 0 0 8px #58a6ff; }
+    .link-report { color: #ff5555; } .link-report:hover { text-shadow: 0 0 8px #ff5555; }
+    .link-telegram { color: #388bfd; } .link-telegram:hover { text-shadow: 0 0 8px #388bfd; }
 </style>
 """
 @menu_blueprint.route('/api/get_sidebar_menu')
@@ -77,7 +72,7 @@ def get_sidebar_menu():
                     
                     with open(file_path, 'r', encoding='utf-8') as f:
                         raw_lines = f.readlines()
-                        lines = [line.replace('\\n', '').replace('\\r', '').strip() for line in raw_lines if line.strip()]
+                    lines = [str(line).replace('\\n', '').replace('\\r', '').strip() for line in raw_lines if line.strip()]
                         
                     game_name = lines if len(lines) > 0 else game_slug
                     game_icon = lines if len(lines) > 1 else "fas fa-gamepad"
@@ -86,17 +81,24 @@ def get_sidebar_menu():
                     node_html = f'<a href="/{game_slug}" class="game-link-btn" style="color: {game_color};"><i class="{game_icon}"></i> {game_name}</a>'
                     games_list_nodes.append(node_html)
     except Exception:
-        games_list_nodes = ['<p style="color:#8b949e; font-size:12px; padding:8px 0;">خطأ في جلب مسارات باقة ألعاب النظام.</p>']
+        games_list_nodes = ['<p style="color:#8b949e; font-size:12px;">خطأ في جلب مسارات الألعاب التلقائية.</p>']
 
-    dynamic_games_html = "".join(games_list_nodes) if games_list_nodes else '<p style="color:#8b949e; font-size:12px; padding:8px 0;">لا توجد ألعاب مستكشفة حالياً.</p>'
+    dynamic_games_html = "".join(games_list_nodes) if games_list_nodes else '<p style="color:#8b949e; font-size:12px;">لا توجد ألعاب مكتشفة حالياً.</p>'
 
     MENU_CANVAS_BODY = """
     <div class="sidebar-overlay" id="slidingSidebarMenu">
         <button class="close-menu-btn" onclick="toggleSidebarMenu(false)"><i class="fas fa-times"></i> إغلاق القائمة</button>
         
+        <!-- 🦁 حقن كرت الأسد المظلم الفاخر وتوسيط الاسم البرمي أسفله مباشرة -->
+        
+            <h2 class="lion-brand-title">albrawe</h2>
+        </div>
+        
         <div class="sidebar-links-wrapper">
+            <!-- 1️⃣ البوابة الرئيسية -->
             <a href="/" class="general-link-item link-home">البوابة الرئيسية</a>
             
+            <!-- 2️⃣ قائمة ألعاب النظام التلقائية المنسدلة بنعومة -->
             <button class="dropdown-trigger-btn" id="gamesMenuTrigger" onclick="toggleGamesDropdown()">
                 <span>قائمة ألعاب النظام 🎮</span>
                 <i class="fas fa-chevron-down arrow-icon"></i>
@@ -105,11 +107,12 @@ def get_sidebar_menu():
                 """ + dynamic_games_html + """
             </div>
             
-            <div class="section-menu-divider"><i class="fas fa-folder-open"></i> مسارات إضافية</div>
+            <!-- الترتيب والمسارات الإضافية القياسية كاملة ودون نقصان -->
+            <div class="section-menu-divider">مسارات إضافية</div>
             <a href="/projects" class="general-link-item link-projects">معرض المشاريع 📁</a>
-            <a href="/about" class="general-link-item link-about">الهوية الشخصية (About us) 👤</a>
+            <a href="/about" class="general-link-item link-about">(About us) 👤</a>
             <a href="/scripts" class="general-link-item link-scripts">إسكربتات بايثون 💻</a>
-            <a href="/report" class="general-link-item link-report" style="color:#ff7b72;">الإبلاغ عن مشكلة (صيانة) 🛠️</a>
+            <a href="/report" class="general-link-item link-report">الإبلاغ عن مشكلة (صيانة) 🛠️</a>
             <a href="https://t.me" target="_blank" class="general-link-item link-telegram">حسابي في التليجرام ✈️</a>
         </div>
     </div>
