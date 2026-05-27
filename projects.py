@@ -22,10 +22,8 @@ PROJECTS_CSS = """
     .global-footer-bar { width: 100%; text-align: center; margin-top: 40px; padding-top: 15px; border-top: 1px solid var(--border-sub); font-size: 12px; color: var(--text-main); font-family: monospace; }
 </style>
 """
-
 @projects_blueprint.route('/projects')
 def projects_page():
-    # الخوارزمية الذكية لجلب وقراءة المشروعات الهندسية حياً من المجلد المستقل تلقائياً
     dynamic_projects_html = ""
     try:
         proj_dir = os.path.join(current_app.root_path, 'static', 'my_projects')
@@ -34,10 +32,11 @@ def projects_page():
                 if filename.endswith('.txt'):
                     file_path = os.path.join(proj_dir, filename)
                     with open(file_path, 'r', encoding='utf-8') as f:
-                        lines = [line.replace('\\n', '').replace('\\r', '').strip() for line in f.readlines() if line.strip()]
+                        lines = [line.replace('\\n', '').replace('\\r', '') for line in f.readlines()]
                     if len(lines) >= 2:
-                        p_title = lines[0]
-                        p_desc = lines[1]
+                        # ✅ تصحيح أخطاء الفهارس الصريحة لقفل الـ 500 للأبد
+                        p_title = lines[0].strip()
+                        p_desc = lines[1].strip()
                         dynamic_projects_html += f'''
                         <div class="proj-card">
                             <div class="proj-title"><i class="fas fa-drafting-table" style="color:var(--border-neon); margin-left:6px;"></i> {p_title}</div>
