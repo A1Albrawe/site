@@ -2,8 +2,8 @@ from flask import Blueprint, render_template_string
 
 home_blueprint = Blueprint('home', __name__)
 
-# عزل التنسيقات الكونية المتجاوبة لحماية النواة والـ CSS من التعارض النصي للأقواس خارج الصندوق
-HOME_CSS = """
+# 🪐 الجزء الأول: عزل أنماط مصفوفة الرادار الكوني التكتيكي الخلفي المتحرك (Dynamic Cosmic Radar Canvas)
+HOME_CSS_PART1 = """
 <style>
     :root {
         --bg-global: #030508; --text-main: #c9d1d9; --bg-card: rgba(13, 17, 23, 0.75); 
@@ -12,7 +12,6 @@ HOME_CSS = """
     
     body { font-family: 'Courier New', Courier, monospace; background: var(--bg-global); color: var(--text-main); margin: 0; padding: 25px; box-sizing: border-box; display: flex; flex-direction: column; min-height: 100vh; justify-content: center; overflow-x: hidden; position: relative; }
     
-    /* 🪐 هندسة ومحرك مصفوفة الرادار الكوني التكتيكي الخلفي المتحرك (Dynamic Cosmic Radar Canvas) */
     .radar-background-grid { position: fixed; top: 50%; left: 50%; width: 140vw; height: 140vw; transform: translate(-50%, -50%); border-radius: 50%; border: 1px solid rgba(63, 185, 80, 0.15); pointer-events: none; z-index: 1; animation: radarRotate 25s linear infinite; display: flex; align-items: center; justify-content: center; }
     .radar-background-grid::before { content: ''; position: absolute; width: 70%; height: 70%; border-radius: 50%; border: 1px dashed rgba(255, 0, 127, 0.12); animation: radarPulse 4s ease-in-out infinite alternate; }
     .radar-background-grid::after { content: ''; position: absolute; width: 40%; height: 40%; border-radius: 50%; border: 2px solid rgba(88, 166, 255, 0.08); }
@@ -22,14 +21,17 @@ HOME_CSS = """
     @keyframes radarPulse { 0% { transform: scale(0.9); opacity: 0.3; } 100% { transform: scale(1.1); opacity: 1; } }
     @keyframes sweepSweep { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* 🌐 شريط الهيدر العلوي الموحد الثابت */
     .top-nav { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto 35px auto; border-bottom: 2px solid var(--border-sub); padding-bottom: 14px; box-sizing: border-box; position: relative; z-index: 100; }
     .brand-logo { font-size: 24px; font-weight: bold; color: var(--text-white); text-shadow: 0 0 10px var(--border-neon), 0 0 20px var(--border-cyber); text-decoration: none; font-family: monospace; cursor: pointer; }
     .menu-btn-trigger { background: #161b22; border: 1px solid var(--border-sub); color: var(--border-neon); padding: 8px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 6px; font-family: inherit; transition: 0.2s; box-shadow: 0 0 10px rgba(63,185,80,0.1); }
     .menu-btn-trigger:hover { background: var(--border-neon); color: #000; box-shadow: 0 0 15px var(--border-neon); }
+</style>
+"""
+# 🪐 الجزء الثاني: عزل أنماط كرت العرض ثنائي الأجنحة المحمي بمحرك تحريك تفاعلي 3D ليميل ويتوهج حياً
+HOME_CSS_PART2 = """
+<style>
     .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; position: relative; z-index: 10; }
     
-    /* 💻 كرت العرض ثنائي الأجنحة المطور والمحمي بـ محرك تحريك تفاعلي 3D ليميل ويتوهج مع الحركة حياً */
     .responsive-profile-wrapper { 
         display: flex; flex-direction: row; gap: 40px; width: 100%; max-width: 1100px; 
         background: var(--bg-card); border: 1px solid var(--border-main); border-radius: 20px; 
@@ -37,15 +39,11 @@ HOME_CSS = """
         border-bottom: 4px solid var(--border-neon); border-right: 4px solid var(--border-cyber);
         box-sizing: border-box; align-items: center; direction: rtl; 
         backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        
-        /* تفعيل عمق الأبعاد الثلاثية لـ بايثون والجافا سكريبت */
         transform-style: preserve-3d;
         transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
         transition: transform 0.15s ease, box-shadow 0.3s ease;
     }
-    .responsive-profile-wrapper:hover {
-        box-shadow: 0 0 30px rgba(63,185,80,0.15), 0 0 40px rgba(255,0,127,0.15);
-    }
+    .responsive-profile-wrapper:hover { box-shadow: 0 0 30px rgba(63,185,80,0.15), 0 0 40px rgba(255,0,127,0.15); }
     
     .profile-sidebar-zone { flex: 1; max-width: 280px; display: flex; flex-direction: column; align-items: center; text-align: center; border-left: 2px solid var(--border-sub); padding-left: 30px; box-sizing: border-box; transform: translateZ(30px); }
     .profile-content-zone { flex: 2; display: flex; flex-direction: column; justify-content: center; text-align: right; box-sizing: border-box; padding-right: 10px; transform: translateZ(20px); }
@@ -70,50 +68,42 @@ HOME_CSS = """
     }
 </style>
 """
-HOME_HTML = """
+# 🪐 الجزء الثالث: الهيكل الصافي للـ HTML ومحرك جافا سكريبت لحساب زوايا الأبعاد الثلاثية والـ Fetch للستارة
+HOME_HTML_BODY = """
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Albrawe | البوابة الرسمية الموحدة لعام 2026</title>
+    <title>Albrawe | البوابة الرسمية لعام 2026</title>
     <link rel="stylesheet" href="https://cloudflare.com">
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
-    <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico">
-    """ + HOME_CSS + """
+    """ + HOME_CSS_PART1 + HOME_CSS_PART2 + """
 </head>
 <body>
 
-    <!-- 🪐 حقن وحياكة كتل رادار الفضاء العسكري الخلفي الدائم الحركة -->
     <div class="radar-background-grid">
         <div class="radar-sweep-line"></div>
     </div>
 
     <div class="top-nav">
-        <!-- النقر على الشعار يعيد التوجيه فوراً لمسار الجذر صيانة للروابط الشاملة -->
         <a href="/" class="brand-logo">Albrawe</a>
-        <!-- دالة الـ Fetch الاستدعائية الحاقنة لستارة المنيو المنبثقة دائرياً حياً -->
         <button class="menu-btn-trigger" onclick="loadAndOpenSidebarMenu()"><i class="fas fa-bars"></i> القائمة</button>
     </div>
 
-    <!-- صندوق الاستقبال الشاغر لحقن كود الـ Sidebar المطور المنبثق دائرياً من menu.py حياً -->
     <div id="dynamicMenuInjectionZone"></div>
 
     <div class="main-container">
-        <!-- 💻 كرت العرض التفاعلي ثنائي الأجنحة المحمي بحركات الأبعاد الثلاثية لراحة زوارك -->
         <div class="responsive-profile-wrapper" id="cyberTiltCard3D">
             
-            <!-- جناح الهوية البرمجية وشعار الهكر المضيء -->
             <div class="profile-sidebar-zone">
                 <div class="avatar-wrapper">
-                    <!-- جلب الصورة الصافية المعتمدة وتخطي أي حجب سحابي من الجذر -->
                     <img class="avatar-img" src="/static/avatar.png" alt="Albrawe Profile" onerror="this.src='https://flagcdn.com'">
                 </div>
                 <h1 class="profile-name">Albrawe</h1>
                 <div class="profile-title">Architecture & Software Engineer</div>
             </div>
             
-            <!-- جناح النبذة والخبرات والتقنيات التكتيكية بالملي -->
             <div class="profile-content-zone">
                 <div class="details-sub-box">
                     <span class="meta-item">
@@ -132,16 +122,13 @@ HOME_HTML = """
         </div>
     </div>
 
-    <!-- ذيل حقوق النشر الثابت المعزز لجميع الواجهات -->
     <div class="global-footer-bar">
         حقوق النشر محفوظة برمجياً وتعود إلى المسؤول البراوي بتاريخ 2026 ©
     </div>
-"""
-    <!-- 🚀 محرك جافا سكريبت المزامنة وحساب زوايا الميل والالتفاف ثلاثي الأبعاد حياً بالبكسل -->
+
     <script>
         const card3D = document.getElementById("cyberTiltCard3D");
 
-        // حساب حركة الفأرة ولمس الشاشة لـ لف وإمالة الكرت بزوايا حادة نيونية
         if (window.innerWidth > 850) {
             card3D.addEventListener("mousemove", (e) => {
                 const rect = card3D.getBoundingClientRect();
@@ -159,7 +146,6 @@ HOME_HTML = """
             });
         }
 
-        // الخوارزمية التزامنية لسحب الستارة المنبثقة دائرياً من menu.py وحقنها حياً فورا
         function loadAndOpenSidebarMenu() {
             const zone = document.getElementById("dynamicMenuInjectionZone");
             
@@ -177,7 +163,7 @@ HOME_HTML = """
                 
                 zone.innerHTML = data.html;
                 setTimeout(() => { toggleSidebarMenu(true); }, 20);
-            }).catch(() => { alert("❌ عطل طارئ: تعذر جلب مستودع الستارة الدائرية المنبثقة."); });
+            }).catch(() => { alert("❌ عطل طارئ: تعذر جلب مستودع الستارة الجانبية."); });
         }
 
         function toggleSidebarMenu(openState) {
@@ -206,4 +192,4 @@ HOME_HTML = """
 
 @home_blueprint.route('/')
 def home_page():
-    return render_template_string(HOME_HTML)
+    return render_template_string(HOME_HTML_BODY)
