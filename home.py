@@ -3,7 +3,7 @@ from flask import Blueprint, render_template_string, current_app
 
 home_blueprint = Blueprint('home', __name__)
 
-# عزل التنسيقات السيبرانية بعد إبادة الصور كلياً لمنع ومسح التحميل اللانهائي
+# عزل التنسيقات السيبرانية الفخمة المدمجة وتأمين أبعاد الصورة التناظرية لمنع الاختفاء
 HOME_TERMINAL_CSS = """
 <style>
     :root {
@@ -23,15 +23,16 @@ HOME_TERMINAL_CSS = """
     
     .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; position: relative; z-index: 10; }
     
-    /* 💻 لوحة التحكم ثنائية الأجنحة المدرعة وعزلها جغرافياً بالكامل حظراً للأعطال والهبوط */
+    /* 💻 لوحة التحكم ثنائية الأجنحة للهاكرز وعزلها المطلق بالبكسل حظراً لعيوب الهبوط والتعليق */
     .responsive-profile-wrapper { display: flex; flex-direction: row; gap: 40px; width: 100%; max-width: 1200px; background: var(--bg-card); border: 1px solid var(--border-main); border-radius: 12px; padding: 45px; box-shadow: 0 25px 55px rgba(0,0,0,0.8), inset 0 0 20px rgba(0,255,102,0.05); border-bottom: 4px solid var(--border-neon); border-right: 4px solid var(--border-cyber); box-sizing: border-box; align-items: center; direction: rtl; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); position: relative; z-index: 50; clip-path: polygon(0 0, 97% 0, 100% 4%, 100% 100%, 3% 100%, 0 96%); }
     .profile-sidebar-zone { flex: 1; max-width: 280px; display: flex; flex-direction: column; align-items: center; text-align: center; border-left: 2px solid var(--border-main); padding-left: 30px; box-sizing: border-box; }
     .profile-content-zone { flex: 2; display: flex; flex-direction: column; justify-content: center; text-align: right; box-sizing: border-box; padding-right: 15px; }
     
-    /* 🛡️ علبة أيقونة الهاكر النيونية المشعة الصافية البديلة لأي وجود للصور تماماً */
-    .avatar-wrapper { width: 150px; height: 150px; border-radius: 50%; border: 2px solid var(--border-cyber); box-shadow: 0 0 25px rgba(255,0,127,0.3); margin-bottom: 20px; display: flex; align-items: center; justify-content: center; background: #000; position: relative; font-size: 65px; color: var(--border-neon); text-shadow: 0 0 15px var(--border-neon); transform-style: preserve-3d; transition: transform 0.25s ease; }
-    .avatar-wrapper::before { content: ''; position: absolute; width: 100%; height: 100%; border: 2px dashed var(--border-neon); border-radius: 50%; animation: radarSpin 12s linear infinite; pointer-events: none; scale: 1.12; opacity: 0.5; }
+    /* 🛡️ علبة استهداف الأفاتار المشعة المخصصة الحاضنة لـ صورتك المرفوعة avatar.png بنقاء مطلق */
+    .avatar-wrapper { width: 150px; height: 150px; border-radius: 8px; border: 2px solid var(--border-cyber); box-shadow: 0 0 25px rgba(255,0,127,0.3); margin-bottom: 20px; display: flex; align-items: center; justify-content: center; background: #000; position: relative; transform-style: preserve-3d; transition: transform 0.25s ease; }
+    .avatar-wrapper::before { content: ''; position: absolute; width: 100%; height: 100%; border: 2px dashed var(--border-neon); border-radius: 50%; animation: radarSpin 12s linear infinite; pointer-events: none; scale: 1.15; opacity: 0.5; z-index: 10; }
     @keyframes radarSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .avatar-img-element { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 6px; }
     
     .profile-name { font-size: 32px; font-weight: bold; color: var(--text-white); margin: 0 0 6px 0; text-shadow: 0 0 10px rgba(255,255,255,0.4); letter-spacing: 1px; }
     .profile-title { font-size: 11px; font-weight: bold; color: var(--border-neon); margin: 0; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 0 8px var(--border-neon); }
@@ -69,9 +70,9 @@ def get_embedded_games_html():
                         raw_lines = f.readlines()
                     lines = [str(line).replace('\\n', '').replace('\\r', '').strip() for line in raw_lines if line.strip()]
                     if len(lines) >= 3:
-                        game_name = lines[0]
-                        game_icon = lines[1]
-                        game_color = lines[2]
+                        game_name = lines
+                        game_icon = lines
+                        game_color = lines
                         node_html = f'<a href="/{game_slug}" class="game-link-btn" style="color: {game_color};"><i class="{game_icon}"></i> {game_name}</a>'
                         games_list_nodes.append(node_html)
     except Exception: pass
@@ -89,10 +90,11 @@ def home_page():
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ALBRAWE_TERMINAL_OS_v2026</title>
     <link rel="stylesheet" href="https://cloudflare.com">
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    """ + HOME_TERMINAL_CSS + """
 </head>
 <body>
-    """ + HOME_TERMINAL_CSS + """
-    
+
     <div class="cyber-grid-overlay"></div>
     <div class="cyber-matrix-rain"></div>
 
@@ -126,10 +128,10 @@ def home_page():
     <div class="main-container">
         <div class="responsive-profile-wrapper">
             
-            <!-- 🎯 الجناح الأيمن المطهّر كلياً والمزود بـ أيقونة الهاكر المضاءة بالأبعاد التفاعلية -->
+            <!-- 🎯 الجناح الأيمن الحاضن لصورتك الأصلية والفريدة المرفوعة بمستودعك حياً وعزلها بالأبعاد -->
             <div class="profile-sidebar-zone">
                 <div class="avatar-wrapper" id="hackerAvatarWrapper">
-                    <i class="fas fa-user-secret"></i>
+                    <img class="avatar-img-element" src="/static/avatar.png" alt="Albrawe Profile Avatar" onerror="this.src='https://flagcdn.com'">
                 </div>
                 <h1 class="profile-name">Albrawe</h1>
                 <div class="profile-title">> SECURE_CORE_ENGINEER</div>
@@ -156,14 +158,14 @@ def home_page():
     <div class="global-footer-bar">حقوق النشر محفوظة سيبرانياً وتعود إلى المسؤول البراوي بتاريخ 2026 © [STABLE_BUILD]</div>
 
     <script>
-        // محرك الـ 3D المحدث لحساب التفاف زوايا أيقونة الهاكر حياً مع حركة الإصبع أو الفأرة
+        // محرك الـ 3D التفاعلي المتجاوب لإمالة علبة صورتك حياً ومزامنة الحركة
         const avatarBox = document.getElementById("hackerAvatarWrapper");
         if (window.innerWidth > 850) {
             document.querySelector(".responsive-profile-wrapper").addEventListener("mousemove", (e) => {
                 const rect = avatarBox.getBoundingClientRect();
                 const x = e.clientX - rect.left - (rect.width/2);
                 const y = e.clientY - rect.top - (rect.height/2);
-                avatarBox.style.transform = `perspective(500px) scale(1.08) rotateX(${-y/4}deg) rotateY(${x/4}deg)`;
+                avatarBox.style.transform = `perspective(500px) scale(1.06) rotateX(${-y/5}deg) rotateY(${x/5}deg)`;
             });
             document.querySelector(".responsive-profile-wrapper").addEventListener("mouseleave", () => {
                 avatarBox.style.transform = "perspective(500px) scale(1) rotateX(0deg) rotateY(0deg)";
