@@ -3,23 +3,42 @@ from flask import Blueprint, request, jsonify
 
 api_blueprint = Blueprint('api', __name__)
 
-# تأمين وحماية مستودع التخزين اللحظي من التصفير في بيئة الـ Serverless
-if not hasattr(api_blueprint, 'CENTRAL_ANALYTICS_SERVER_DB'): api_blueprint.CENTRAL_ANALYTICS_SERVER_DB = []
-if not hasattr(api_blueprint, 'TOTAL_HISTORICAL_VISITS_COUNT'): api_blueprint.TOTAL_HISTORICAL_VISITS_COUNT = 0
-if not hasattr(api_blueprint, 'PERMANENT_COMPLAINTS_SERVER_DB'): api_blueprint.PERMANENT_COMPLAINTS_SERVER_DB = []
+# تأمين الخزانات السحابية من التصفير العشوائي في بيئة Serverless Functions لـ Vercel
+if not hasattr(api_blueprint, 'CENTRAL_ANALYTICS_SERVER_DB'):
+    api_blueprint.CENTRAL_ANALYTICS_SERVER_DB = []
 
-@api_blueprint.route('/api/log_visit', methods=['POST'])
+if not hasattr(api_blueprint, 'TOTAL_HISTORICAL_VISITS_COUNT'):
+    api_blueprint.TOTAL_HISTORICAL_VISITS_COUNT = 0
+
+if not hasattr(api_blueprint, 'PERMANENT_COMPLAINTS_SERVER_DB'):
+    api_blueprint.PERMANENT_COMPLAINTS_SERVER_DB = []
+
+# تفعيل وتطهير معبر جذر استقبال البيانات الصريح من كافة المسارات والصفحات الفرعية
+@api_blueprint.route('/api/log_visit', methods=['POST', 'OPTIONS'])
 def log_visit():
+    if request.method == 'OPTIONS':
+        return jsonify({"status": "cors_pass"}), 200
+        
     data = request.get_json() or {}
     username = data.get('username', 'زائر مجهول').strip()
     user_agent = request.headers.get('User-Agent', 'غير معروف')
-    location = data.get('location', 'القاهرة - مصر').strip()
+    location = data.get('location', 'جاري جلب الموقع...').strip()
     
-    device_model = "Windows PC 💻"
+    # محرك الفرز الذكي للتعرف بالبكسل على ماركات اللاب توب والكمبيوتر حياً لزوارك
+    device_model = "كمبيوتر / غير معروف"
     ua_lower = user_agent.lower()
-    if "android" in ua_lower: device_model = "Android Device 📱"
-    elif "iphone" in ua_lower: device_model = "iPhone 🍏"
-    elif "macintosh" in ua_lower: device_model = "MacBook 💻"
+    if "android" in ua_lower:
+        device_model = "Android Device 📱"
+        if "samsung" in ua_lower or "sm-" in ua_lower: device_model = "Samsung Galaxy 📱"
+        elif "redmi" in ua_lower or "xiaomi" in ua_lower or "mi " in ua_lower: device_model = "Xiaomi / Redmi 📱"
+        elif "oppo" in ua_lower: device_model = "Oppo Phone 📱"
+        elif "huawei" in ua_lower: device_model = "Huawei Phone 📱"
+    elif "iphone" in ua_lower or "ipad" in ua_lower:
+        device_model = "iPhone 🍏"
+    elif "windows" in ua_lower: 
+        device_model = "Windows PC 💻"
+    elif "macintosh" in ua_lower:
+        device_model = "MacBook 💻"
 
     user_entry = next((item for item in api_blueprint.CENTRAL_ANALYTICS_SERVER_DB if item["username"] == username), None)
     
@@ -27,49 +46,69 @@ def log_visit():
         api_blueprint.TOTAL_HISTORICAL_VISITS_COUNT += 1  
         user_entry = {
             "username": username, "deviceModel": device_model, "location": location,
-            "loginTime": datetime.datetime.now().strftime("%H:%M:%S"),
-            "duration": 4, "snakeTime": 0, "tetrisTime": 0, "xoTime": 0, "shooterTime": 0, "clickerTime": 0, "cardTime": 0,
+            "loginTime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "duration": 0, "snakeTime": 0, "tetrisTime": 0, "xoTime": 0, "shooterTime": 0, "clickerTime": 0, "cardTime": 0,
             "browsingHistory": ["الرئيسية 🏠"]
         }
         api_blueprint.CENTRAL_ANALYTICS_SERVER_DB.append(user_entry)
     else:
         user_entry["location"] = location
+        user_entry["deviceModel"] = device_model
         
     return jsonify({"status": "success"})
-
-@api_blueprint.route('/api/update_duration', methods=['POST'])
+@api_blueprint.route('/api/update_duration', methods=['POST', 'OPTIONS'])
 def update_duration():
+    if request.method == 'OPTIONS':
+        return jsonify({"status": "cors_pass"}), 200
+        
     data = request.get_json() or {}
     username = data.get('username', '').strip()
+    game_type = data.get('game', '')
     inc = data.get('durationIncrement', 4)
     
     if username:
-        # ضمان إجبار الخادم على تغذية ورفع قيم السجلات حياً
         user_entry = next((item for item in api_blueprint.CENTRAL_ANALYTICS_SERVER_DB if item["username"] == username), None)
-        if user_entry: user_entry["duration"] += inc
-        else:
-            api_blueprint.TOTAL_HISTORICAL_VISITS_COUNT += 1
-            api_blueprint.CENTRAL_ANALYTICS_SERVER_DB.append({
-                "username": username, "deviceModel": "Hacker Engine 💻", "location": "القاهرة - مصر",
-                "loginTime": datetime.datetime.now().strftime("%H:%M:%S"),
-                "duration": inc, "snakeTime": 0, "tetrisTime": 0, "xoTime": 0, "shooterTime": 0, "clickerTime": 0, "cardTime": 0,
-                "browsingHistory": ["الرئيسية 🏠"]
-            })
+        if user_entry:
+            # تحديث وقت التصفح الإجمالي أو اللعبة الفرعية حياً في مصفوفة الأدمن
+            if game_type == 'snake': user_entry["snakeTime"] += inc
+            elif game_type == 'tetris': user_entry["tetrisTime"] += inc
+            elif game_type == 'xo': user_entry["xoTime"] += inc
+            elif game_type == 'shooter': user_entry["shooterTime"] += inc
+            elif game_type == 'clicker': user_entry["clickerTime"] += inc
+            elif game_type == 'card_game': user_entry["cardTime"] += inc
+            else: user_entry["duration"] += inc
+            
+            # تسجيل مسار الصفحات تلقائياً بداخل التحليلات
+            current_page_label = "لعبة 🎮" if game_type and game_type != 'browsing' else "الرئيسية 🏠"
+            if user_entry["browsingHistory"][-1] != current_page_label:
+                user_entry["browsingHistory"].append(current_page_label)
+            
     return jsonify({"status": "success"})
 
-@api_blueprint.route('/api/submit_complaint', methods=['POST'])
+@api_blueprint.route('/api/submit_complaint', methods=['POST', 'OPTIONS'])
 def submit_complaint():
+    if request.method == 'OPTIONS':
+        return jsonify({"status": "cors_pass"}), 200
+        
     data = request.get_json() or {}
     user = data.get('user', 'زائر مجهول').strip()
     details = data.get('details', '').strip()
     if details:
-        api_blueprint.PERMANENT_COMPLAINTS_SERVER_DB.append({"user": user, "details": details, "date": datetime.datetime.now().strftime("%H:%M")})
+        complaint_entry = {
+            "user": user, "details": details,
+            "date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+        }
+        api_blueprint.PERMANENT_COMPLAINTS_SERVER_DB.append(complaint_entry)
         return jsonify({"status": "success"})
     return jsonify({"status": "error"}), 400
 
 @api_blueprint.route('/api/admin_get_all_data', methods=['GET'])
 def admin_get_all_data():
-    return jsonify({"analytics": api_blueprint.CENTRAL_ANALYTICS_SERVER_DB, "reports": api_blueprint.PERMANENT_COMPLAINTS_SERVER_DB, "historicalVisits": api_blueprint.TOTAL_HISTORICAL_VISITS_COUNT})
+    return jsonify({
+        "analytics": api_blueprint.CENTRAL_ANALYTICS_SERVER_DB,
+        "reports": api_blueprint.PERMANENT_COMPLAINTS_SERVER_DB,
+        "historicalVisits": api_blueprint.TOTAL_HISTORICAL_VISITS_COUNT
+    })
 
 @api_blueprint.route('/api/admin_clear_data', methods=['POST'])
 def admin_clear_data():
