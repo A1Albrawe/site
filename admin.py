@@ -2,74 +2,58 @@ from flask import Blueprint, request, jsonify, render_template_string, session, 
 
 admin_blueprint = Blueprint('admin', __name__)
 
-# 🔒 بيانات اعتماد لوحة الإدارة الحصينة ومفاتيح عبور الرادار لعام 2026
+# 🔒 بيانات اعتماد لوحة الإدارة الحصينة لعام 2026
 ADMIN_USER = "albrawe"
 ADMIN_PASS = "PASS2026"
 SECRET_GATE_KEY = "open_gate_key_final_2026"
 
-ADMIN_HTML = """
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>لوحة التحليلات والرقابة السيبرانية | Albrawe</title>
-    <link rel="stylesheet" href="https://cloudflare.com">
-    <style>
-        :root { --bg-global: #020406; --text-main: #3fb950; --bg-card: rgba(6, 10, 15, 0.92); --border-main: #1f883d; --border-neon: #00ff66; --text-white: #fff; --border-sub: #161b22; }
-        
-        body { font-family: 'Courier New', Courier, monospace; background: var(--bg-global); color: var(--text-main); padding: 15px; margin: 0; box-sizing: border-box; transition: 0.3s; }
-        .container { width: 100%; max-width: 1440px; margin: 0 auto; }
-        
-        .main-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-main); padding-bottom: 12px; margin-bottom: 20px; }
-        @media (max-width: 600px) { .main-header { flex-direction: column; gap: 10px; text-align: center; } }
-        
-        .logout-btn { background: #f85149; color: #fff; border: none; padding: 7px 14px; border-radius: 4px; cursor: pointer; font-weight: bold; text-decoration: none; font-family: inherit; font-size: 12px; transition: 0.2s; border: 1px solid #ff007f; }
-        .logout-btn:hover { background: #da3633; box-shadow: 0 0 10px #f85149; }
-        
-        .complaints-inbox-card { background: var(--bg-card); border: 1px solid var(--border-main); border-top: 4px solid #ff5555; border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(255,85,85,0.04); }
-        .complaints-grid { display: flex; flex-direction: column; gap: 8px; max-height: 150px; overflow-y: auto; }
-        .report-txt { font-size: 12px; display: flex; justify-content: space-between; padding: 6px; border-bottom: 1px dashed var(--border-main); }
-        .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 20px; }
-        .stat-box { background: var(--bg-card); border: 1px solid var(--border-main); padding: 15px 10px; border-radius: 10px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-        .stat-box h5 { margin: 0 0 4px 0; color: var(--text-white); font-size: 12px; font-weight: bold; }
-        .stat-box p { margin: 0; font-size: 20px; font-weight: bold; color: var(--border-neon); font-family: monospace; text-shadow: 0 0 5px var(--border-neon); }
-        .sub-stat-label { display: block; font-size: 11px; color: var(--text-main); margin-top: 6px; border-top: 1px dashed var(--border-main); padding-top: 4px; }
-        
-        .section-title { color: #79c0ff; margin: 20px 0 10px 0; font-size: 15px; border-bottom: 2px solid var(--border-main); padding-bottom: 6px; text-align: right; display: flex; align-items: center; gap: 6px; }
-        .section-title.live { color: #00ff66; text-shadow: 0 0 5px #00ff66; }
-        .section-title.archive { color: var(--text-white); }
-        
-        .cards-mesh { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; margin-bottom: 25px; }
-        
-        .user-panel-card { background: var(--bg-card); border: 1px solid var(--border-main); border-radius: 10px; padding: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; flex-direction: column; gap: 8px; text-align: right; font-size: 12px; }
-        .user-panel-card.live-border { border-right: 5px solid #00ff66; box-shadow: 0 0 10px rgba(0,255,102,0.1); }
-        .user-panel-card.archive-border { border-right: 5px solid var(--border-main); opacity: 0.9; }
-        .card-top-info { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-main); padding-bottom: 6px; }
-        .card-username { font-size: 13px; font-weight: bold; color: var(--text-white); }
-        .card-device { font-size: 11px; color: #ffd700; font-weight: bold; }
-        
-        .card-meta-line { display: flex; align-items: center; gap: 6px; color: var(--text-main); }
-        .card-meta-line i { color: var(--text-main); width: 16px; text-align: center; }
-        
-        .flag-img { width: 16px; height: 12px; border-radius: 2px; object-fit: cover; }
-        .time-badge { color: var(--border-neon); font-weight: bold; background: rgba(0,255,102,0.05); padding: 2px 5px; border-radius: 4px; border: 1px solid var(--border-main); font-family: monospace; }
-        .games-total-badge { color: #ff007f; font-weight: bold; background: rgba(255,0,127,0.05); padding: 2px 5px; border-radius: 4px; border: 1px solid var(--border-main); font-family: monospace; }
-        
-        .drop-trigger-btn { background: var(--bg-global); border: 1px solid var(--border-main); color: var(--text-main); width: 100%; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 11.5px; font-weight: bold; text-align: right; display: flex; justify-content: space-between; align-items: center; font-family: inherit; }
-        .drop-trigger-btn:hover { border-color: var(--border-neon); color: var(--text-white); }
-        
-        .drop-content-panel { display: none; background: #000; border: 1px solid var(--border-main); padding: 8px; border-radius: 4px; margin-top: 2px; }
-        .route-path-box { font-size: 11px; color: #a371f7; line-height: 1.5; word-break: break-all; }
-        
-        .games-dashboard { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; }
-        .mini-game-tag { font-size: 10.5px; display: flex; justify-content: space-between; padding: 4px; background: var(--bg-card); border-radius: 4px; border: 1px solid var(--border-main); font-family: monospace; }
-        
-        .clear-db-btn { background: var(--bg-card); border: 1px solid #d29922; color: #d29922; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: bold; font-family: inherit; font-size: 11.5px; }
-    </style>
-</head>
-<body>
-    <div class="container">
+# عزل التنسيقات الكلية لـ لوحة الأدمن والتحليلات رباعية الأبعاد
+ADMIN_MAIN_CSS = """
+<style>
+    :root { --bg-global: #020406; --text-main: #3fb950; --bg-card: rgba(6, 10, 15, 0.92); --border-main: #1f883d; --border-neon: #00ff66; --text-white: #fff; --border-sub: #161b22; }
+    body { font-family: 'Courier New', Courier, monospace; background: var(--bg-global); color: var(--text-main); padding: 15px; margin: 0; box-sizing: border-box; transition: 0.3s; }
+    .container { width: 100%; max-width: 1440px; margin: 0 auto; }
+    .main-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-main); padding-bottom: 12px; margin-bottom: 20px; }
+    @media (max-width: 600px) { .main-header { flex-direction: column; gap: 10px; text-align: center; } }
+    .logout-btn { background: #f85149; color: #fff; border: none; padding: 7px 14px; border-radius: 4px; cursor: pointer; font-weight: bold; text-decoration: none; font-family: inherit; font-size: 12px; transition: 0.2s; border: 1px solid #ff007f; }
+    .logout-btn:hover { background: #da3633; box-shadow: 0 0 10px #f85149; }
+    .complaints-inbox-card { background: var(--bg-card); border: 1px solid var(--border-main); border-top: 4px solid #ff5555; border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(255,85,85,0.04); }
+    .complaints-grid { display: flex; flex-direction: column; gap: 8px; max-height: 150px; overflow-y: auto; }
+    .report-txt { font-size: 12px; display: flex; justify-content: space-between; padding: 6px; border-bottom: 1px dashed var(--border-main); }
+</style>
+"""
+ADMIN_STATS_CSS = """
+<style>
+    .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .stat-box { background: var(--bg-card); border: 1px solid var(--border-main); padding: 15px 10px; border-radius: 10px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .stat-box h5 { margin: 0 0 4px 0; color: var(--text-white); font-size: 12px; font-weight: bold; }
+    .stat-box p { margin: 0; font-size: 20px; font-weight: bold; color: var(--border-neon); font-family: monospace; text-shadow: 0 0 5px var(--border-neon); }
+    .sub-stat-label { display: block; font-size: 11px; color: var(--text-main); margin-top: 6px; border-top: 1px dashed var(--border-main); padding-top: 4px; }
+    .section-title { color: #79c0ff; margin: 20px 0 10px 0; font-size: 15px; border-bottom: 2px solid var(--border-main); padding-bottom: 6px; text-align: right; display: flex; align-items: center; gap: 6px; }
+    .section-title.live { color: #00ff66; text-shadow: 0 0 5px #00ff66; }
+    .section-title.archive { color: var(--text-white); }
+    .cards-mesh { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; margin-bottom: 25px; }
+    .user-panel-card { background: var(--bg-card); border: 1px solid var(--border-main); border-radius: 10px; padding: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; flex-direction: column; gap: 8px; text-align: right; font-size: 12px; }
+    .user-panel-card.live-border { border-right: 5px solid #00ff66; box-shadow: 0 0 10px rgba(0,255,102,0.1); }
+    .user-panel-card.archive-border { border-right: 5px solid var(--border-main); opacity: 0.9; }
+    .card-top-info { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-main); padding-bottom: 6px; }
+    .card-username { font-size: 13px; font-weight: bold; color: var(--text-white); }
+    .card-device { font-size: 11px; color: #ffd700; font-weight: bold; }
+    .card-meta-line { display: flex; align-items: center; gap: 6px; color: var(--text-main); }
+    .card-meta-line i { color: var(--text-main); width: 16px; text-align: center; }
+    .flag-img { width: 16px; height: 12px; border-radius: 2px; object-fit: cover; }
+    .time-badge { color: var(--border-neon); font-weight: bold; background: rgba(0,255,102,0.05); padding: 2px 5px; border-radius: 4px; border: 1px solid var(--border-main); font-family: monospace; }
+    .games-total-badge { color: #ff007f; font-weight: bold; background: rgba(255,0,127,0.05); padding: 2px 5px; border-radius: 4px; border: 1px solid var(--border-main); font-family: monospace; }
+    .drop-trigger-btn { background: var(--bg-global); border: 1px solid var(--border-main); color: var(--text-main); width: 100%; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 11.5px; font-weight: bold; text-align: right; display: flex; justify-content: space-between; align-items: center; font-family: inherit; }
+    .drop-trigger-btn:hover { border-color: var(--border-neon); color: var(--text-white); }
+    .drop-content-panel { display: none; background: #000; border: 1px solid var(--border-main); padding: 8px; border-radius: 4px; margin-top: 2px; }
+    .route-path-box { font-size: 11px; color: #a371f7; line-height: 1.5; word-break: break-all; }
+    .games-dashboard { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; }
+    .mini-game-tag { font-size: 10.5px; display: flex; justify-content: space-between; padding: 4px; background: var(--bg-card); border-radius: 4px; border: 1px solid var(--border-main); font-family: monospace; }
+    .clear-db-btn { background: var(--bg-card); border: 1px solid #d29922; color: #d29922; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: bold; font-family: inherit; font-size: 11.5px; }
+</style>
+"""
+ADMIN_HTML_BODY = """
         <div class="main-header">
             <h2 style="margin:0; color:var(--text-white); font-family:monospace;">> RADAR_MONITORING_OS_v3</h2>
             <div style="display:flex; gap:10px; align-items:center;">
@@ -100,6 +84,8 @@ ADMIN_HTML = """
         <h3 class="section-title archive">> سجل ومستودع الزوار المغادرين التاريخي</h3>
         <div class="cards-mesh" id="archiveCardsContainer"></div>
     </div>
+"""
+ADMIN_JS_PART1 = """
     <script>
         const BarkCardDropdown = (panelId) => {
             const panel = document.getElementById(panelId);
@@ -118,7 +104,6 @@ ADMIN_HTML = """
             remainder = remainder % 3600;
             let minutes = Math.floor(remainder / 60);
             let seconds = remainder % 60;
-            
             let timeParts = [];
             if (years > 0) timeParts.push(years + " سنة");
             if (months > 0) timeParts.push(months + " شهر");
@@ -128,6 +113,10 @@ ADMIN_HTML = """
             if (seconds > 0 || timeParts.length === 0) timeParts.push(seconds + " ثانية");
             return timeParts.join(" و ");
         }
+    </script>
+"""
+ADMIN_JS_PART2 = """
+    <script>
         function fetchAndRenderAnalytics() {
             fetch('/api/admin_get_all_data')
             .then(res => res.json())
@@ -187,13 +176,11 @@ ADMIN_HTML = """
                         let totalGamesSeconds = snake + tetris + xo + shooter + clicker + card;
                         let currentLoc = user.location || "القاهرة - مصر";
                         let countryCode = "eg"; if (currentLoc.toLowerCase().includes("saudi")) countryCode = "sa";
-                        
                         let flagImgHtml = '<img class="flag-img" src="https://flagcdn.com' + countryCode + '.png" alt="Flag">';
                         let stepsList = user.browsingHistory || ["الرئيسية 🏠"];
                         let isUserStillLive = liveDB.some(l => l.username === user.username);
                         let cardIdSuffix = user.username.replace(/[^a-zA-Z0-9]/g, '');
-                        let pathPanelId = 'pathPanel_' + cardIdSuffix;
-                        let gamesPanelId = 'gamesPanel_' + cardIdSuffix;
+                        let pathPanelId = 'pathPanel_' + cardIdSuffix; let gamesPanelId = 'gamesPanel_' + cardIdSuffix;
                         
                         let cardBodyHtml = '<div class="user-panel-card ' + (isUserStillLive ? 'live-border' : 'archive-border') + '">' +
                             '<div class="card-top-info"><span class="card-username"><i class="fas fa-user-circle"></i> ' + user.username + '</span><span class="card-device">' + (user.deviceModel || 'Android Device 📱') + '</span></div>' +
@@ -226,6 +213,19 @@ ADMIN_HTML = """
         function clearLogsDatabase() { if(confirm("هل أنت متأكد من مسح الأرشيف التراكمي وتصفير السجلات بالكامل؟")) { localStorage.removeItem('permanent_archive_db'); localStorage.removeItem('backup_historical'); fetch('/api/admin_clear_data', { method: 'POST' }).then(() => fetchAndRenderAnalytics()); } }
         fetchAndRenderAnalytics(); setInterval(fetchAndRenderAnalytics, 4000);
     </script>
+"""
+# عزل الأنماط كلياً بمتغير خارجي لحماية الأرقام العشرية من التداخل مع tokenizer بايثون
+LOGIN_CARD_CSS = """
+<style>
+    body { font-family: monospace; background: #020406; color: #3fb950; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+    .login-card { background: rgba(6,10,15,0.92); border: 1px solid #1f883d; border-top: 4px solid #ff5555; padding: 30px; border-radius: 12px; width: 100%; max-width: 360px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+    .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 6px; text-align: right; }
+    input { padding: 10px; background: #000; border: 1px solid #1f883d; border-radius: 6px; color: #fff; font-family: inherit; width: 100%; box-sizing: border-box; }
+    input:focus { border-color: #ff5555; outline: none; }
+    .btn { background: #ff5555; color: #fff; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; font-family: inherit; margin-top: 10px; border: 1px solid #ff007f; }
+</style>
+"""
+
 LOGIN_HTML = """
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -233,14 +233,7 @@ LOGIN_HTML = """
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل دخول الإدارة | Albrawe</title>
-    <style>
-        body { font-family: monospace; background: #020406; color: #3fb950; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-        .login-card { background: rgba(6, 10, 15, 0.92); border: 1px solid #1f883d; border-top: 4px solid #ff5555; padding: 30px; border-radius: 12px; width: 100%; max-width: 360px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
-        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 6px; text-align: right; }
-        input { padding: 10px; background: #000; border: 1px solid #1f883d; border-radius: 6px; color: #fff; font-family: inherit; width: 100%; box-sizing: border-box; }
-        input:focus { border-color: #ff5555; outline: none; }
-        .btn { background: #ff5555; color: #fff; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; font-family: inherit; margin-top: 10px; border: 1px solid #ff007f; }
-    </style>
+    """ + LOGIN_CARD_CSS + """
 </head>
 <body>
     <div class="login-card">
@@ -271,11 +264,11 @@ def admin_page():
         if user == ADMIN_USER and passwd == ADMIN_PASS:
             session['admin_logged_in'] = True
             session['gate_key_authenticated'] = True
-            return render_template_string(ADMIN_HTML)
+            return render_template_string("<!DOCTYPE html><html lang='ar' dir='rtl'><head>" + ADMIN_MAIN_CSS + ADMIN_STATS_CSS + "</head><body><div class='container'>" + ADMIN_HTML_BODY + "</div>" + ADMIN_JS_PART1 + ADMIN_JS_PART2 + "</body></html>")
         else:
             return render_template_string(LOGIN_HTML + "<script>alert('❌ خطأ فادح: بيانات الاعتماد غير صحيحة!');</script>")
     if session.get('admin_logged_in') and session.get('gate_key_authenticated'):
-        return render_template_string(ADMIN_HTML)
+        return render_template_string("<!DOCTYPE html><html lang='ar' dir='rtl'><head>" + ADMIN_MAIN_CSS + ADMIN_STATS_CSS + "</head><body><div class='container'>" + ADMIN_HTML_BODY + "</div>" + ADMIN_JS_PART1 + ADMIN_JS_PART2 + "</body></html>")
     if gate_key == SECRET_GATE_KEY:
         session['gate_key_authenticated'] = True
         return render_template_string(LOGIN_HTML)
