@@ -1,11 +1,10 @@
-from flask import Blueprint, request, jsonify, render_template_string, session, redirect, abort
+from flask import Blueprint, request, jsonify, render_template_string, session, redirect
 
 admin_blueprint = Blueprint('admin', __name__)
 
-# 🔒 بيانات اعتماد لوحة الإدارة الحصينة لعام 2026
+# 🔒 بيانات اعتماد لوحة الإدارة القياسية الحصينة لعام 2026
 ADMIN_USER = "albrawe"
 ADMIN_PASS = "PASS2026"
-SECRET_GATE_KEY = "open_gate_key_final_2026"
 
 # عزل التنسيقات الكلية لـ لوحة الأدمن والتحليلات رباعية الأبعاد
 ADMIN_MAIN_CSS = """
@@ -204,21 +203,19 @@ ADMIN_JS_PART2 = """
                         if(isUserStillLive) liveCardsHtml += cardBodyHtml; else archiveCardsHtml += cardBodyHtml;
                     });
                 }
-                if(liveCardsHtml === "") liveCardsHtml = '<p style="grid-column:1/-1; text-align:center; color:var(--text-main); font-size:12px;">لا توجد أي زيارات نشطة حالياً. 🛰️</p>';
-                if(archiveCardsHtml === "") archiveCardsHtml = '<p style="grid-column:1/-1; text-align:center; color:var(--text-main); font-size:12px;">لا توجد سجلات مغادرين.</p>';
                 document.getElementById('liveCardsContainer').innerHTML = liveCardsHtml;
                 document.getElementById('archiveCardsContainer').innerHTML = archiveCardsHtml;
             });
         }
-        function clearLogsDatabase() { if(confirm("هل أنت متأكد من مسح الأرشيف التراكمي وتصفير السجلات بالكامل؟")) { localStorage.removeItem('permanent_archive_db'); localStorage.removeItem('backup_historical'); fetch('/api/admin_clear_data', { method: 'POST' }).then(() => fetchAndRenderAnalytics()); } }
+        function clearLogsDatabase() { if(confirm("هل أنت متأكد من مسح السجلات؟")) { localStorage.removeItem('permanent_archive_db'); localStorage.removeItem('backup_historical'); fetch('/api/admin_clear_data', { method: 'POST' }).then(() => fetchAndRenderAnalytics()); } }
         fetchAndRenderAnalytics(); setInterval(fetchAndRenderAnalytics, 4000);
     </script>
 """
-# عزل الأنماط كلياً بمتغير خارجي لحماية الأرقام العشرية من التداخل مع tokenizer بايثون
+# عزل الأنماط كلياً بمتغير خارجي لحماية الأرقام العشرية من التداخل مع بايثون
 LOGIN_CARD_CSS = """
 <style>
     body { font-family: monospace; background: #020406; color: #3fb950; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-    .login-card { background: rgba(6,10,15,0.92); border: 1px solid #1f883d; border-top: 4px solid #ff5555; padding: 30px; border-radius: 12px; width: 100%; max-width: 360px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+    .login-card { background: #0d1117; border: 1px solid #1f883d; border-top: 4px solid #ff5555; padding: 30px; border-radius: 12px; width: 100%; max-width: 360px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
     .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 6px; text-align: right; }
     input { padding: 10px; background: #000; border: 1px solid #1f883d; border-radius: 6px; color: #fff; font-family: inherit; width: 100%; box-sizing: border-box; }
     input:focus { border-color: #ff5555; outline: none; }
@@ -254,28 +251,23 @@ LOGIN_HTML = """
 </html>
 """
 
+# فتح المسار المباشر الصافي 100% لإبادة الـ 404
 @admin_blueprint.route('/', methods=['GET', 'POST'])
 @admin_blueprint.route('/albrawe-admin-panel-2026', methods=['GET', 'POST'])
 def admin_page():
-    gate_key = request.args.get('key', '')
     if request.method == 'POST':
         user = request.form.get('username')
         passwd = request.form.get('password')
         if user == ADMIN_USER and passwd == ADMIN_PASS:
             session['admin_logged_in'] = True
-            session['gate_key_authenticated'] = True
             return render_template_string("<!DOCTYPE html><html lang='ar' dir='rtl'><head>" + ADMIN_MAIN_CSS + ADMIN_STATS_CSS + "</head><body><div class='container'>" + ADMIN_HTML_BODY + "</div>" + ADMIN_JS_PART1 + ADMIN_JS_PART2 + "</body></html>")
         else:
             return render_template_string(LOGIN_HTML + "<script>alert('❌ خطأ فادح: بيانات الاعتماد غير صحيحة!');</script>")
-    if session.get('admin_logged_in') and session.get('gate_key_authenticated'):
+    if session.get('admin_logged_in'):
         return render_template_string("<!DOCTYPE html><html lang='ar' dir='rtl'><head>" + ADMIN_MAIN_CSS + ADMIN_STATS_CSS + "</head><body><div class='container'>" + ADMIN_HTML_BODY + "</div>" + ADMIN_JS_PART1 + ADMIN_JS_PART2 + "</body></html>")
-    if gate_key == SECRET_GATE_KEY:
-        session['gate_key_authenticated'] = True
-        return render_template_string(LOGIN_HTML)
-    abort(404)
+    return render_template_string(LOGIN_HTML)
 
 @admin_blueprint.route('/albrawe-admin-panel-2026/logout')
 def admin_logout():
     session.pop('admin_logged_in', None)
-    session.pop('gate_key_authenticated', None)
     return redirect('/')
